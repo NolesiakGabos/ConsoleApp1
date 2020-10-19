@@ -8,10 +8,13 @@ namespace ConsoleApp1
     {
 
 
-        public static void DecryptFile(string fileToEncrypt, string destinitionFilename, byte[] key)
+        public static void DecryptFile(string fileToDecrypt, string destinitionFilename, byte[] key)
         {
-            using (var sourceStream = File.OpenRead(fileToEncrypt))
+            //fileToDncrypt - Plik do odszyfrowania
+            using (var sourceStream = File.OpenRead(fileToDecrypt))
+            //destinitionFilename -lokacja i nazwa pod jaką ma być zapisany odszyfrowany
             using (var destinationStream = File.Create(destinitionFilename))
+            //definicja metody szyfrowania
             using (var provider = new AesCryptoServiceProvider())
             {
                 provider.BlockSize = 128;
@@ -29,13 +32,17 @@ namespace ConsoleApp1
                 }
 
             }
-            File.Delete(fileToEncrypt);
+            //opcjonalne kasowanie pliku źródłowego
+            File.Delete(fileToDecrypt);
         }
 
-        public static void EncryptFile(string fileToDecrypt, string destinitionFile)
+        public static void EncryptFile(string fileToEncrypt, string destinitionFile)
         {
-            using (var sourceStream = File.OpenRead(fileToDecrypt))
+            //fileToEncrypt plik do zaszyfrowania
+            using (var sourceStream = File.OpenRead(fileToEncrypt))
+            //destinitionFile - nazwa i lokalizacja gdzie zapisać plik zaszyfrowany
             using (var destinationStream = File.Create(destinitionFile))
+            //definicja metod szyfrowania
             using (var provider = new AesCryptoServiceProvider())
             {
                 provider.BlockSize = 128;
@@ -50,12 +57,14 @@ namespace ConsoleApp1
                     destinationStream.Write(provider.IV, 0, provider.IV.Length);
                     sourceStream.CopyTo(cryptoStream);
                     Console.WriteLine(System.Convert.ToBase64String(provider.Key));
+                    //Zapisanie klucza szyfrowania do pliku
                     File.WriteAllText("key.txt", Convert.ToBase64String(provider.Key));
 
                 }
 
             }
-            File.Delete(fileToDecrypt);
+            //opcjonalne kasowanie pliku źróddłowego
+            File.Delete(fileToEncrypt);
         }
 
 
